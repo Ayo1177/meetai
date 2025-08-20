@@ -1,7 +1,9 @@
+import { redirect } from "next/navigation";
 import { headers } from "next/headers";
 import { authClient } from "@/lib/auth-client";
-import { HomeView } from "@/modules/home/ui/views/home-view";
-import { redirect } from "next/navigation";
+import { SignInView } from '@/modules/auth/ui/views/sign-in-view'
+
+
 
 const Page = async () => {
   const { data: session } = await authClient.getSession({
@@ -10,13 +12,11 @@ const Page = async () => {
     },
   });
 
-  if (!session) {
-    redirect("/auth/sign-in");
+  if (session) {
+    redirect("/");
   }
 
-  return (
-    <HomeView />
-  );
+  return <SignInView />;
 };
 
 export default Page;
