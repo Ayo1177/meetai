@@ -6,12 +6,12 @@ import { SignInView } from '@/modules/auth/ui/views/sign-in-view'
 
 
 const Page = async () => {
-  const { data: session } = await authClient.getSession({
+  const session = await authClient.getSession({
     fetchOptions: {
       headers: await headers(),
     },
   });
-
+  console.log("SESSION:", session);
   if (session) {
     redirect("/");
   }
