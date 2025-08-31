@@ -12,7 +12,7 @@ const Page = async () => {
     },
   });
   console.log("SESSION:", session);
-  if (session) {
+  if (session?.data) {
     redirect("/");
   }
 

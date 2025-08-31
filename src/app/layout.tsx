@@ -5,6 +5,7 @@ import { TRPCReactProvider } from '@/trpc/client'
 
 import React from 'react'
 import "./globals.css";
+import { Toaster } from 'sonner';
 interface Props {
     children: React.ReactNode
 };
@@ -29,6 +30,7 @@ export default function RootLayout({
     <html lang="en">
       <body
         className={`${inter.className} antialised`}>
+          <Toaster />
         {children}
         </body>
     </html>
