@@ -1,0 +1,23 @@
+import Image from "next/image"
+
+interface Props {
+    title: string;
+    description: string;
+}
+
+export const EmptyState = ({ 
+    title, 
+    description 
+}: Props) => {
+    return (
+        <div className="flex flex-1 items-center justify-center">
+                <Image src="/logo.svg" alt="Empty" width={240} height={240} />
+                <div className="flex flex-col gap-y-2 text-center">
+                    <h6 className="text-lg font-medius">{title}</h6>
+                    <p className="text-sm">{description}</p>
+                </div>
+        </div>
+    )
+
+}
+
