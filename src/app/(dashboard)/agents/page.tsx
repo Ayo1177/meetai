@@ -5,12 +5,20 @@ import { trpc, getQueryClient } from '@/trpc/server';
 import { dehydrate, HydrationBoundary } from '@tanstack/react-query';
 import { LoadingState } from '@/components/loading-state';
 import { ErrorBoundary } from 'react-error-boundary';
-import { AgentsListHeader } from '@/modules/agents/ui/views/components/agents-list-headet';
+import { AgentsListHeader } from '@/modules/agents/ui/views/components/agents-list-header';
 import { authClient } from '@/lib/auth-client';
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
+import { SearchParams } from 'nuqs';
+import { loadSearchParams } from '@/modules/agents/params';
 
-const Page = async () => {
+interface Props {
+  searchParams: Promise<SearchParams>
+}
+
+const Page = async ({ searchParams }: Props) => {
+  const filters = await loadSearchParams(searchParams)
+
   const { data: session } = await authClient.getSession({
     fetchOptions: {
       headers: await headers(),
@@ -21,9 +29,10 @@ const Page = async () => {
     redirect("/auth/sign-in");
   }
 
-
   const queryClient = getQueryClient();
-  void queryClient.prefetchQuery(trpc.agents.getMany.queryOptions());
+  void queryClient.prefetchQuery(trpc.agents.getMany.queryOptions({
+    ...filters
+  }));
 
   return (
     <>
