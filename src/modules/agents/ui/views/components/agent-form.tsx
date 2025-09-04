@@ -25,13 +25,13 @@ import { toast } from "sonner";
 interface AgentFormProps {
     onSuccess: () => void;
     onCancel: () => void;
-    intialValues?: AgentGetone;
+    initialValues?: AgentGetone;
 }
 
 export const AgentForm = ({
     onSuccess,
     onCancel,
-    intialValues,
+    initialValues,
 }: AgentFormProps) => {
     const trpc = useTRPC();
     const router = useRouter();
@@ -44,9 +44,30 @@ export const AgentForm = ({
                     trpc.agents.getMany.queryOptions({})
                 );
                 
-                if (intialValues?.id) {
+                if (initialValues?.id) {
                     await queryClient.invalidateQueries(
-                        trpc.agents.getOne.queryOptions({ id: intialValues.id })
+                        trpc.agents.getOne.queryOptions({ id: initialValues.id })
+                    );
+                }
+                
+                onSuccess?.();
+            },
+            onError: (error) => {
+                toast.error(error.message);
+            },
+        })
+    );
+
+    const updateAgent = useMutation(
+        trpc.agents.update.mutationOptions({
+            onSuccess: async () => {
+                await queryClient.invalidateQueries(
+                    trpc.agents.getMany.queryOptions({})
+                );
+                
+                if (initialValues?.id) {
+                    await queryClient.invalidateQueries(
+                        trpc.agents.getOne.queryOptions({ id: initialValues.id })
                     );
                 }
                 
@@ -61,17 +82,17 @@ export const AgentForm = ({
     const form = useForm<z.infer<typeof agentsInsertSchema>>({
         resolver: zodResolver(agentsInsertSchema),
         defaultValues: {
-            name: intialValues?.name || "",
-            instructions: intialValues?.instructions || "",
+            name: initialValues?.name || "",
+            instructions: initialValues?.instructions || "",
         },
     });
 
-    const isEdit = !!intialValues?.id;
-    const isPending = createAgent.isPending;
+    const isEdit = !!initialValues?.id;
+    const isPending = createAgent.isPending || updateAgent.isPending;
 
     const onSubmit = (values: z.infer<typeof agentsInsertSchema>) => {
         if (isEdit) {
-            console.log("TODO: Edit agent");
+            updateAgent.mutate({ ...values, id: initialValues?.id! });
         } else {
             createAgent.mutate(values);
         }

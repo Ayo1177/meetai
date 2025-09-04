@@ -3,27 +3,69 @@
 import { ErrorState } from "@/components/error-state";
 import { LoadingState } from "@/components/loading-state";
 import { useTRPC } from "@/trpc/client";
-import { useSuspenseQuery } from "@tanstack/react-query";
+import { useMutation, useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
 import { AgentIdViewHeader } from "./components/agent-id-view-header";
 import { Badge, VideoIcon } from "lucide-react";
 import { GeneratedAvatar } from "@/components/generated-avatar";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import { useConfirm } from "../../hooks/use-confirm";
+import { useState } from "react";
+import { UpdateAgentDialog } from "./components/update-agent-dialog";
 
 interface Props {
     agentId: string;
 }
 
 export const AgentIdView = ({ agentId }: Props) => {
+    
     const trpc = useTRPC();
+    const router = useRouter();
+    const queryClient = useQueryClient();
+
+    const [UpdateAgentDialogOpen, setUpdateAgentDialogOpen] = useState(false);
     
     const { data, isLoading, isError } = useSuspenseQuery(trpc.agents.getOne.queryOptions({ id: agentId }));
 
+    const removeAgent = useMutation(
+        trpc.agents.remove.mutationOptions({
+            onSuccess: async () => {
+                await queryClient.invalidateQueries(trpc.agents.getMany.queryOptions({}));
+                router.push("/agents");
+            },
+            onError: (error) => {
+                toast.error(error.message);
+            },
+        })
+    );
+
+    const [RemoveConfirmationDialog, confirmRemove] = useConfirm();
+
+    const handleRemoveAgent = async () => {
+        const ok = await confirmRemove(
+            "Are you sure?",
+            `The following action will remove ${data.name} and all of its meetings`
+        );
+        
+        if (!ok) return; 
+        await removeAgent.mutate({ id: agentId });
+    };
+    
+
     return (
+        <>
+        {RemoveConfirmationDialog}
+        <UpdateAgentDialog 
+        open={UpdateAgentDialogOpen} 
+        onOpenChange={setUpdateAgentDialogOpen}
+        initialValues={data}
+        />
         <div className="flex-1 py-4 px-4 md:px-8 flex flex-col gap-y-4">
             <AgentIdViewHeader
               agentId={agentId}
               agentName={data.name}
-              onEdit={() => {}}
-              onRemove={() => {}}
+              onEdit={() => {setUpdateAgentDialogOpen(true)}}
+              onRemove={() => {handleRemoveAgent()}}
             />
             <div className="bg-white rounded-lg border">
                 <div className="px-4 py-5 gap-y-5 flex flex-col col-span-5">
@@ -48,6 +90,7 @@ export const AgentIdView = ({ agentId }: Props) => {
                 </div>
             </div>
         </div>
+        </>
     )
 
 }
