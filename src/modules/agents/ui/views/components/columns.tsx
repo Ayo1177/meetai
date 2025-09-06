@@ -10,7 +10,7 @@ import { CornerDownRightIcon, VideoIcon } from "lucide-react"
 // You can use a Zod schema here if you want.
 
 
-export const columns: ColumnDef<AgentGetone>[] = [
+export const columns: ColumnDef<AgentGetMany[number]>[] = [
   {
     accessorKey: "name",
     header: "Agent Name",
