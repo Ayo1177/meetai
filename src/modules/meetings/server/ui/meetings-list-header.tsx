@@ -1,12 +1,30 @@
 'use client'
 
 import { Button } from "@/components/ui/button"
-import { PlusIcon } from "lucide-react"
+import { PlusIcon, XCircleIcon } from "lucide-react"
 import { NewMeetingDialog } from "./components/new-meeting-dialog"
 import { useState } from "react"
+import { MeetingsSearchFilter } from "./components/meetings-search-filter"
+import { StatusFilter } from "./components/status-filter"
+import { AgentIdFilter } from "./components/agent-id-filter"
+import { useMeetingsFilters } from "../../hooks/use-meetings-filters"
+import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
 
 export const MeetingsListHeader = () => {
     const [isDialogOpen, setIsDialogOpen] = useState(false)
+
+    const [filters, setFilters] = useMeetingsFilters()
+    const isAnyFilterModified = 
+    !!filters.search || !!filters.status || !!filters.agentId
+    
+    const onClearFilters = () => {
+        setFilters({ 
+            search: "", 
+            status: null, 
+            agentId: "",
+            page: 1,
+         })
+    }
 
     return (
         <>
@@ -22,9 +40,23 @@ export const MeetingsListHeader = () => {
                         New Meeting
                     </Button>
                 </div>
-                <div className="flex items-center">
-                    {/* Search and filters can go here */}
+                <ScrollArea className="h-[500px]">
+                <div className="flex items-center gap-4">
+                    <MeetingsSearchFilter />
+                    <StatusFilter />
+                    <AgentIdFilter />
+                    {isAnyFilterModified && (
+                        <Button variant="outline" 
+                        onClick={onClearFilters}>
+                            <XCircleIcon />
+                            Clear Filters
+                        </Button>
+                    )}
                 </div>
+                <ScrollBar 
+                    orientation="horizontal"
+                />
+                </ScrollArea>
             </div>
         </>
     )
