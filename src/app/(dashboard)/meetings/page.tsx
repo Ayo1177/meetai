@@ -7,8 +7,18 @@ import { MeetingsListHeader } from '@/modules/meetings/server/ui/meetings-list-h
 import { authClient } from '@/lib/auth-client';
 import { headers } from 'next/headers';
 import { redirect } from 'next/navigation';
+import { SearchParams } from 'next/dist/server/request/search-params';
+import { loadSearchParams } from '@/modules/meetings/params';
 
-const page = async () => {
+
+
+interface Props {
+  searchParams: Promise<SearchParams>
+}
+
+const page = async ({ searchParams }: Props) => {
+    const filters = await loadSearchParams(searchParams)
+
     const { data: session } = await authClient.getSession({
         fetchOptions: {
           headers: await headers(),
@@ -22,19 +32,19 @@ const page = async () => {
 
     const queryClient = getQueryClient();
     void queryClient.prefetchQuery(
-        trpc.meetings.getMany.queryOptions({}));
+        trpc.meetings.getMany.queryOptions({
+          ...filters,
+        }));
 
   return (
-    <>
-    <MeetingsListHeader />
-        <HydrationBoundary state={dehydrate(queryClient)}>
-            <Suspense>
-                <ErrorBoundaryWrapper fallback={<div>Something went wrong loading meetings</div>}>
-                    <MeetingsView />
-                </ErrorBoundaryWrapper>
-            </Suspense>
-        </HydrationBoundary>
-    </>
+    <HydrationBoundary state={dehydrate(queryClient)}>
+        <MeetingsListHeader />
+        <Suspense>
+            <ErrorBoundaryWrapper fallback={<div>Something went wrong loading meetings</div>}>
+                <MeetingsView />
+            </ErrorBoundaryWrapper>
+        </Suspense>
+    </HydrationBoundary>
   )
 }
 
