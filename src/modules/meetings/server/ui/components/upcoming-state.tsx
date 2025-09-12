@@ -2,7 +2,8 @@
 
 import { EmptyState } from "@/components/empty-state"
 import { Button } from "@/components/ui/button"
-import { BanIcon, Link, VideoIcon } from "lucide-react"
+import { BanIcon, VideoIcon } from "lucide-react"
+import Link from "next/link"
 
 
 
@@ -39,7 +40,7 @@ export const UpcomingState = ({
                     asChild 
                     className="w-full lg:w-[250px]"
                 >
-                    <Link href={`/calls/${meetingId}/start`} className="flex items-center gap-2 w-full">
+                    <Link href={`/call/${meetingId}`} className="flex items-center gap-2 w-full justify-center">
                         <VideoIcon className="w-4 h-4" />
                         Start Meeting
                     </Link>

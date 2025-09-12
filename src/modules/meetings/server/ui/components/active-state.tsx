@@ -2,7 +2,8 @@
 
 import { EmptyState } from "@/components/empty-state"
 import { Button } from "@/components/ui/button"
-import { BanIcon, Link, VideoIcon } from "lucide-react"
+import { VideoIcon } from "lucide-react"
+import Link from "next/link"
 
 
 
@@ -23,14 +24,13 @@ export const ActiveState = ({
             />
             <div className="flex flex-col-reverse lg:flex-row lg:justify-center items-center gap-2 w-full"> 
                 <Button
-                asChild
-                className="w-full lg:w-auto"
+                    asChild
+                    className="w-full lg:w-auto"
                 >
-                    <Link href={`/calls/${meetingId}`}>                 
-                    <VideoIcon />
-                    Join Meeting
+                    <Link href={`/call/${meetingId}`} className="flex items-center gap-2">
+                        <VideoIcon className="w-4 h-4" />
+                        Join Meeting
                     </Link>
-
                 </Button>
             </div>
         </div>
