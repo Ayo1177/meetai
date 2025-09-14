@@ -8,7 +8,6 @@ import { MeetingsSearchFilter } from "./components/meetings-search-filter"
 import { StatusFilter } from "./components/status-filter"
 import { AgentIdFilter } from "./components/agent-id-filter"
 import { useMeetingsFilters } from "../../hooks/use-meetings-filters"
-import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area"
 
 export const MeetingsListHeader = () => {
     const [isDialogOpen, setIsDialogOpen] = useState(false)
@@ -40,7 +39,6 @@ export const MeetingsListHeader = () => {
                         New Meeting
                     </Button>
                 </div>
-                <ScrollArea className="h-[500px]">
                 <div className="flex items-center gap-4">
                     <MeetingsSearchFilter />
                     <StatusFilter />
@@ -53,10 +51,6 @@ export const MeetingsListHeader = () => {
                         </Button>
                     )}
                 </div>
-                <ScrollBar 
-                    orientation="horizontal"
-                />
-                </ScrollArea>
             </div>
         </>
     )
