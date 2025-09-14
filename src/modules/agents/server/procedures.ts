@@ -18,7 +18,7 @@ export const agentsRouter = createTRPCRouter({
                 .set(input)
                 .where(and(
                     eq(agents.id, input.id),
-                    eq(agents.iserId, ctx.auth.data!.session.userId)
+                    eq(agents.userId, ctx.auth.data!.session.userId)
                 ))
                 .returning();
 
@@ -42,7 +42,7 @@ export const agentsRouter = createTRPCRouter({
         .where(
             and(
                 eq(agents.id, input.id),
-                eq(agents.iserId, ctx.auth.data!.session.userId)
+                eq(agents.userId, ctx.auth.data!.session.userId)
             )
         )
         .returning();
@@ -67,7 +67,7 @@ export const agentsRouter = createTRPCRouter({
             .where(
                 and(
                     eq(agents.id, input.id),
-                    eq(agents.iserId, ctx.auth.data!.session.userId)    
+                    eq(agents.userId, ctx.auth.data!.session.userId)    
                 )
             )
 
@@ -101,7 +101,7 @@ export const agentsRouter = createTRPCRouter({
             .from(agents)
             .where(
                 and(
-                eq(agents.iserId, ctx.auth.data!.session.userId),
+                eq(agents.userId, ctx.auth.data!.session.userId),
                 search ? ilike(agents.name, `%${search}%`) : undefined
                 )
             )
@@ -114,7 +114,7 @@ export const agentsRouter = createTRPCRouter({
             .from(agents)
             .where(
                 and(
-                    eq(agents.iserId, ctx.auth.data!.session.userId),
+                    eq(agents.userId, ctx.auth.data!.session.userId),
                     search ? ilike(agents.name, `%${search}%`) : undefined
                 )
             )
@@ -140,7 +140,7 @@ export const agentsRouter = createTRPCRouter({
                 .insert(agents)
                 .values({
                     ...input,
-                    iserId: (ctx.auth as any).data.session.userId
+                    userId: (ctx.auth as any).data.session.userId
                 })
                 .returning();
                 
