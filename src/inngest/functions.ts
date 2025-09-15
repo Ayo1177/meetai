@@ -3,7 +3,6 @@ import { agents, meetings, user } from "@/db/schema";
 import { inngest } from "@/inngest/client";
 import { inArray, eq } from "drizzle-orm";
 import JSONL from "jsonl-parse-stringify";
-import { createAgent } from "@inngest/agent-kit";
 
 interface StreamTranscriptItem {
   speaker_id: string;
@@ -11,13 +10,19 @@ interface StreamTranscriptItem {
   timestamp: number;
 }
 
-interface TextMessage {
-  content: string;
-}
-
-const summarizer = createAgent({
-  name: "Summarizer",
-  instructions: `You are an expert summarizer. You write readable, concise, simple content. You are given a transcript of a meeting and you need to summarize it.
+async function summarizeTranscript(transcript: any[]): Promise<string> {
+  const response = await fetch("https://api.openai.com/v1/chat/completions", {
+    method: "POST",
+    headers: {
+      "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      model: "gpt-4o-mini",
+      messages: [
+        {
+          role: "system",
+          content: `You are an expert summarizer. You write readable, concise, simple content. You are given a transcript of a meeting and you need to summarize it.
 
 Use the following markdown structure for every output:
 
@@ -35,13 +40,19 @@ Example:
 
 #### Next Section
 - Feature X automatically does Y
-- Mention of integration with Z`,
-  model: {
-    provider: "openai",
-    model: "gpt-4o-mini",
-    apiKey: process.env.OPENAI_API_KEY,
-  },
-});
+- Mention of integration with Z`
+        },
+        {
+          role: "user",
+          content: `Summarize the following meeting transcript:\n${JSON.stringify(transcript)}`
+        }
+      ],
+    }),
+  });
+
+  const data = await response.json();
+  return data.choices[0].message.content;
+}
 
 
 export const meetingsProcessing = inngest.createFunction(
@@ -107,18 +118,14 @@ export const meetingsProcessing = inngest.createFunction(
     });
 
     const summary = await step.run("summarize-transcript", async () => {
-      const result = await summarizer.run(
-        "Summarize the following meeting transcript:" +
-        JSON.stringify(transcriptWithSpeakers)
-      );
-      return result;
+      return await summarizeTranscript(transcriptWithSpeakers);
     });
 
     await step.run("save-summary", async () => {
       await db
         .update(meetings)
         .set({
-          summary: summary,
+          summaryUrl: summary,
           status: "completed",
         })
         .where(eq(meetings.id, event.data.meetingId));
