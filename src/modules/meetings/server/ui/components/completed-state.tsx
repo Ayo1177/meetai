@@ -4,11 +4,12 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { MeetingGetone } from "@/modules/meetings/types";
 import { format } from "date-fns";
 import { BookOpenIcon, ClockFadingIcon, FileTextIcon, FileVideoIcon, SparklesIcon} from "lucide-react";
-import markdown from "react-markdown";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 import { formatDuration } from "@/lib/utils";
 import Markdown from "react-markdown";
+import { Transcript } from "./transcript";
+import { ChatProvider } from "./chat-provider";
 
 interface Props {
     data: MeetingGetone;
@@ -53,6 +54,12 @@ export const CompletedState = ({ data }: Props) => {
                         <ScrollBar orientation="horizontal" />
                     </ScrollArea>
                 </div>
+                <TabsContent value="ask-ai">
+                    <ChatProvider meetingId={data.id} meetingName={data.name} />
+                </TabsContent>
+                <TabsContent value="transcript">
+                    <Transcript meetingId={data.id} />
+                </TabsContent>
                 <TabsContent value="recording">
                     <div className="bg-white rounded-lg border p-4">
                         <video
@@ -89,7 +96,9 @@ export const CompletedState = ({ data }: Props) => {
                             className="flex items-center gap-x-2 [&>svg]:size-4"
                             >
                                 <ClockFadingIcon className="text-blue-700" />
-                                {data.duration ? formatDuration(data.duration) : "no duration"}
+                                {data.startedAt && data.endedAt ? 
+                                    formatDuration(Math.floor((new Date(data.endedAt).getTime() - new Date(data.startedAt).getTime()) / 1000)) : 
+                                    "no duration"}
                             </Badge>
                             <div>
                                 {data.summaryUrl ? (
@@ -105,7 +114,7 @@ export const CompletedState = ({ data }: Props) => {
                                             <h3 className="text-lg font-medium mb-3" {...props} />
                                         ),
                                         h4: (props) => (
-                                            <ul className="text-base font-medium mb-2" {...props} />
+                                            <h4 className="text-base font-medium mb-2" {...props} />
                                         ),
                                         ul: (props) => (
                                             <ul className="list-disc list-inside mb-2" {...props} />
