@@ -1,6 +1,5 @@
 import { useTRPC } from "@/trpc/client"
 import { useState } from "react"
-import { useQuery } from "@tanstack/react-query"
 import { useMeetingsFilters } from "@/modules/meetings/hooks/use-meetings-filters"
 import { CommandSelect } from "./command-select"
 import { GeneratedAvatar } from "@/components/generated-avatar"
@@ -14,11 +13,10 @@ export const AgentIdFilter = () => {
     const trpc = useTRPC();
 
     const [agentSearch, setAgentSearch] = useState("");
-    const { data } = useQuery(
-        trpc.agents.getMany.queryOptions({
-            pageSize: 100,
-            search: agentSearch,
-        }));
+    const { data } = trpc.agents.getMany.useQuery({
+        pageSize: 100,
+        search: agentSearch,
+    });
 
 
     
@@ -28,7 +26,6 @@ export const AgentIdFilter = () => {
             options={data?.items?.map((agent) => ({
                 id: agent.id,
                 value: agent.id,
-                label: agent.name,
                 children: (
                     <div className="flex items-center gap-2">
                         <GeneratedAvatar
@@ -39,7 +36,7 @@ export const AgentIdFilter = () => {
                         <span>{agent.name}</span>
                     </div>
                 )
-            }))}
+            })) ?? []}
             onSelect={(value) => setFilters({ agentId: value })}
             onSearch={setAgentSearch}
             value={filters.agentId ?? ""}

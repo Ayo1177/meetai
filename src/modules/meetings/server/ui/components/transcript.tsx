@@ -7,7 +7,6 @@ import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { generatedAvatrUri } from "@/lib/avatar";
 import { useTRPC } from "@/trpc/client";
-import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { SearchIcon } from "lucide-react";
 import { useState } from "react";
@@ -20,7 +19,7 @@ interface Props {
 
 export const Transcript = ({ meetingId }: Props) => {
     const trpc = useTRPC();
-    const { data } = useQuery(trpc.meetings.getTranscript.queryOptions({ id: meetingId }));
+    const { data } = trpc.meetings.getTranscript.useQuery({ id: meetingId });
 
     const [searchQuery, setSearchQuery] = useState("");
     const filteredData = (data ?? []).filter((item) => 

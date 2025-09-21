@@ -3,7 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import type { AgentGetone } from "@/modules/agents/types";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
@@ -37,47 +37,29 @@ export const AgentForm = ({
     const router = useRouter();
     const queryClient = useQueryClient();
 
-    const createAgent = useMutation(
-        trpc.agents.create.mutationOptions({
-            onSuccess: async () => {
-                await queryClient.invalidateQueries(
-                    trpc.agents.getMany.queryOptions({})
-                );
-                
-                if (initialValues?.id) {
-                    await queryClient.invalidateQueries(
-                        trpc.agents.getOne.queryOptions({ id: initialValues.id })
-                    );
-                }
-                
-                onSuccess?.();
-            },
-            onError: (error) => {
-                toast.error(error.message);
-            },
-        })
-    );
+    const createAgent = trpc.agents.create.useMutation({
+        onSuccess: async () => {
+            await queryClient.invalidateQueries();
+            onSuccess?.();
+        },
+        onError: (error) => {
+            toast.error(error.message);
 
-    const updateAgent = useMutation(
-        trpc.agents.update.mutationOptions({
-            onSuccess: async () => {
-                await queryClient.invalidateQueries(
-                    trpc.agents.getMany.queryOptions({})
-                );
-                
-                if (initialValues?.id) {
-                    await queryClient.invalidateQueries(
-                        trpc.agents.getOne.queryOptions({ id: initialValues.id })
-                    );
-                }
-                
-                onSuccess?.();
-            },
-            onError: (error) => {
-                toast.error(error.message);
-            },
-        })
-    );
+            if (error.data?.code === "FORBIDDEN") {
+                router.push("/upgrade");
+            }
+        },
+    });
+
+    const updateAgent = trpc.agents.update.useMutation({
+        onSuccess: async () => {
+            await queryClient.invalidateQueries();
+            onSuccess?.();
+        },
+        onError: (error) => {
+            toast.error(error.message);
+        },
+    });
 
     const form = useForm<z.infer<typeof agentsInsertSchema>>({
         resolver: zodResolver(agentsInsertSchema),

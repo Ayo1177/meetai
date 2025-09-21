@@ -5,7 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import type { MeetingGetone } from "@/modules/meetings/types";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 
 import { Button } from "@/components/ui/button";
@@ -45,54 +45,34 @@ export const MeetingForm = ({
     const [openNewAgentDialog, setOpenNewAgentDialog] = useState(false);
     const [agentSearch, setAgentSearch] = useState("");
     
-    const agents = useQuery(
-        trpc.agents.getMany.queryOptions({
-            pageSize: 100,
-            search: agentSearch,
-        })
-    );
+    const agents = trpc.agents.getMany.useQuery({
+        pageSize: 100,
+        search: agentSearch,
+    });
 
-    const createMeeting = useMutation(
-        trpc.meetings.create.mutationOptions({
-            onSuccess: async (data) => {
-                await queryClient.invalidateQueries(
-                    trpc.meetings.getMany.queryOptions({})
-                );
-                
-                if (initialValues?.id) {
-                    await queryClient.invalidateQueries(
-                        trpc.meetings.getOne.queryOptions({ id: initialValues.id })
-                    );
-                }
-                
-                onSuccess?.(data.id);
-            },
-            onError: (error) => {
-                toast.error(error.message);
-            },
-        })
-    );
+    const createMeeting = trpc.meetings.create.useMutation({
+        onSuccess: async (data) => {
+            await queryClient.invalidateQueries();
+            onSuccess?.(data.id);
+        },
+        onError: (error) => {
+            toast.error(error.message);
 
-    const updateMeeting = useMutation(
-        trpc.meetings.update.mutationOptions({
-            onSuccess: async () => {
-                await queryClient.invalidateQueries(
-                    trpc.meetings.getMany.queryOptions({})
-                );
-                
-                if (initialValues?.id) {
-                    await queryClient.invalidateQueries(
-                        trpc.meetings.getOne.queryOptions({ id: initialValues.id })
-                    );
-                }
-                
-                onSuccess?.();
-            },
-            onError: (error) => {
-                toast.error(error.message);
-            },
-        })
-    );
+            if (error.data?.code === "FORBIDDEN") {
+                router.push("/upgrade");
+            }
+        },
+    });
+
+    const updateMeeting = trpc.meetings.update.useMutation({
+        onSuccess: async () => {
+            await queryClient.invalidateQueries();
+            onSuccess?.();
+        },
+        onError: (error) => {
+            toast.error(error.message);
+        },
+    });
 
     const form = useForm<z.infer<typeof meetingsInsertSchema>>({
         resolver: zodResolver(meetingsInsertSchema),

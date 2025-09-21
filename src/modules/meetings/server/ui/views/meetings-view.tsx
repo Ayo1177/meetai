@@ -6,26 +6,29 @@ import { DataTable } from "@/components/data-table";
 import { EmptyState } from "@/components/empty-state";
 import { useMeetingsFilters } from "@/modules/meetings/hooks/use-meetings-filters";
 import { useTRPC } from "@/trpc/client";
-import { useQuery, useSuspenseQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 
 export const MeetingsView = () => {
     const trpc = useTRPC();
     const router = useRouter();
     const [filters, setFilters] = useMeetingsFilters()
-    const { data } = useSuspenseQuery(
-        trpc.meetings.getMany.queryOptions({
-            ...filters,
-        }));
+    const [data] = trpc.meetings.getMany.useSuspenseQuery({
+        ...filters,
+    });
     
     return (
         <div className="flex-1 pb-4 px-4 md:px-8">
             <div className="flex flex-col gap-y-4">
                 <DataTable
                 data={data.items.map(item => ({
-                    ...item,
+                    id: item.id,
+                    name: item.name,
+                    instructions: item.instructions || undefined,
                     agentname: item.agent.name,
-                    duration: item.agent.duration
+                    status: item.status,
+                    duration: item.agent.duration,
+                    startedAt: item.startedAt ? new Date(item.startedAt) : undefined,
+                    agent: item.agent
                 }))}
                 columns={columns}
                 onRowClick={(row) => router.push(`/meetings/${row.id}`)}
