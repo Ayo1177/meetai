@@ -10,7 +10,9 @@ import { ErrorBoundary } from "react-error-boundary"
 
 const Page = async () => {
     const session = await authClient.getSession({
-        headers: await headers(),
+        fetchOptions: {
+            headers: await headers(),
+        },
     })
     if (!session) {
         redirect("/sign-in")

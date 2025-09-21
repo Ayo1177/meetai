@@ -3,7 +3,6 @@ import React, { Suspense } from 'react';
 import { AgentsView, AgentsViewError, AgentsViewLoading } from '@/modules/agents/ui/views/agents-view';
 import { trpc, getQueryClient } from '@/trpc/server';
 import { dehydrate, HydrationBoundary } from '@tanstack/react-query';
-import { LoadingState } from '@/components/loading-state';
 import { ErrorBoundary } from 'react-error-boundary';
 import { AgentsListHeader } from '@/modules/agents/ui/views/components/agents-list-header';
 import { authClient } from '@/lib/auth-client';

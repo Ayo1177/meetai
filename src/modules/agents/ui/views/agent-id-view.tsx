@@ -3,9 +3,9 @@
 import { ErrorState } from "@/components/error-state";
 import { LoadingState } from "@/components/loading-state";
 import { useTRPC } from "@/trpc/client";
-import { useMutation, useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { AgentIdViewHeader } from "./components/agent-id-view-header";
-import { Badge, VideoIcon } from "lucide-react";
+import { VideoIcon } from "lucide-react";
 import { GeneratedAvatar } from "@/components/generated-avatar";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -32,7 +32,7 @@ export const AgentIdView = ({ agentId }: Props) => {
             await queryClient.invalidateQueries();
             router.push("/agents");
         },
-        onError: (error: any) => {
+        onError: (error: { message: string }) => {
             toast.error(error.message);
         },
     });

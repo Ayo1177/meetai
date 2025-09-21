@@ -12,7 +12,7 @@ export const premiumRouter = createTRPCRouter({
 
     getCurrentSubscription: protectedProcedure.query(async ({ ctx }) => {
         const customer = await polarClient.customers.getStateExternal({
-            externalId: ctx.auth.data.user.id,
+            externalId: ctx.auth.data!.user.id,
         })
         const subscription = customer.activeSubscriptions[0]
         if (!subscription) {
@@ -24,7 +24,7 @@ export const premiumRouter = createTRPCRouter({
         return product
     }),
 
-    getProducts: protectedProcedure.query(async ({ ctx }) => {
+    getProducts: protectedProcedure.query(async () => {
         const products = await polarClient.products.list({
             isArchived: false,
             isRecurring: true,

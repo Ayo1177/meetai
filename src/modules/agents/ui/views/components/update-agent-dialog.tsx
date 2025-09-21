@@ -1,10 +1,11 @@
 import { ResponsiveDialog } from "@/components/responsive-dialog"
 import { AgentForm } from "./agent-form"
+import type { AgentGetone } from "@/modules/agents/types"
 
 interface UpdateAgentDialogProps {
     open: boolean
     onOpenChange: (open: boolean) => void
-    initialValues?: any
+    initialValues?: AgentGetone
 }
 
 export const UpdateAgentDialog = ({

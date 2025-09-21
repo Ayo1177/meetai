@@ -12,7 +12,6 @@ import { LoaderIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { CallUI } from "./call-ui";
 import { useTRPC } from "@/trpc/client";
-import { useMutation } from "@tanstack/react-query";
 
 interface Props {
     meetingId: string;
@@ -30,9 +29,7 @@ export const CallConnect = ({
     userImage,
 }: Props) => {
     const trpc = useTRPC();
-    const { mutateAsync: generateToken } = useMutation(
-        trpc.meetings.generateToken.mutationOptions()
-    );
+    const { mutateAsync: generateToken } = trpc.meetings.generateToken.useMutation();
 
     const [client, setClient] = useState<StreamVideoClient>();
     useEffect(() => {

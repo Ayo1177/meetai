@@ -1,9 +1,7 @@
 import { db } from "@/db";
 import { meetings, agents } from "@/db/schema";
-import { StreamVideo } from "@stream-io/video-react-sdk";
-import { and, eq, not, or } from "drizzle-orm";
+import { and, eq, not } from "drizzle-orm";
 import {
-    CallEndedEvent,
     CallTranscriptionReadyEvent,
     CallRecordingReadyEvent,
     CallSessionStartedEvent,
@@ -14,7 +12,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { streamVideo } from "@/lib/stream-video";
 import { inngest } from "@/inngest/client";
 import { MessageNewEvent } from "@stream-io/node-sdk";
-import { text } from "stream/consumers";
 import { generatedAvatrUri } from "@/lib/avatar";
 import OpenAI from "openai";
 import { streamChat } from "@/lib/stream-chat";
@@ -52,7 +49,7 @@ export async function POST(req: NextRequest) {
     let payload: unknown;
     try {
         payload = JSON.parse(body) as Record<string, unknown>
-    } catch (error) {
+    } catch {
         return NextResponse.json(
             { error: "Invalid JSON" },
             { status: 400 }
@@ -279,8 +276,8 @@ export async function POST(req: NextRequest) {
 
         const previousMessages = channel.state.messages
             .slice(-5)
-            .filter((msg: any) => msg.text && msg.text.trim() !== "")
-            .map<ChatCompletionMessageParam>((message: any) => ({
+            .filter((msg) => msg.text && msg.text.trim() !== "")
+            .map<ChatCompletionMessageParam>((message) => ({
                 role: message.user?.id === existingAgent.id ? "assistant" : "user",
                 content: message.text || "",
             }))

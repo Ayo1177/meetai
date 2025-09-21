@@ -66,13 +66,13 @@ export const UpgradeView = () => {
                                 title={product.name}
                                 price={
                                     product.prices[0].type === "recurring"
-                                    ? (product.prices[0] as any).priceAmount / 100
-                                    : (product.prices[0] as any).priceAmount / 100
+                                    ? (product.prices[0] as { priceAmount: number }).priceAmount / 100
+                                    : (product.prices[0] as { priceAmount: number }).priceAmount / 100
                                 }
                                 description={product.description ?? undefined}
                                 priceSuffix={`/${product.prices[0].recurringInterval}`}
                                 features={product.benefits.map(
-                                    (benefit: any) => benefit.description
+                                    (benefit: { description: string }) => benefit.description
                                 )}
                                 badge={product.metadata?.badge as string | undefined}
                             />

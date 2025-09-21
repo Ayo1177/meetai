@@ -23,7 +23,6 @@ interface Props {
     onSearch?: (value: string) => void;
     value: string;
     placeholder: string;
-    isSearchable?: boolean;
     className?: string;
 }
 
@@ -33,7 +32,6 @@ export const CommandSelect = ({
     onSearch, 
     placeholder, 
     value, 
-    isSearchable, 
     className 
 }: Props) => {
     const [open, setOpen] = useState(false);

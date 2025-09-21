@@ -5,7 +5,6 @@ import { Badge } from "@/components/ui/badge"
 import { ColumnDef } from "@tanstack/react-table"
 import { CornerDownRightIcon, ClockFadingIcon } from "lucide-react"
 import { ClockIcon, Loader2, CheckCircle2, XCircle } from "lucide-react"
-import { format } from "date-fns"
 import { cn } from "@/lib/utils"
 import humanizeDuration from "humanize-duration"
 
@@ -106,7 +105,7 @@ export const columns: ColumnDef<AgentMany[number]>[] = [
 ]
 
 type AgentMany = Array<{
-    agent: any
+    agent: { id: string; name: string }
     id: string;
     name: string;
     instructions?: string;

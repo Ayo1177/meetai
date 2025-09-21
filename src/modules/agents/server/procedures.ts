@@ -1,11 +1,10 @@
 import { db } from "@/db";
 import { createTRPCRouter, premiumProcedure, protectedProcedure } from "@/trpc/init";
-import { agents, session } from "@/db/schema"
+import { agents, meetings } from "@/db/schema"
 import { agentsInsertSchema, agentsUpdateSchema } from "../schemas";
 import { z } from "zod";
 import { and, eq, getTableColumns, ilike, sql, desc, count } from "drizzle-orm";
 import { DEFAULT_PAGE, DEFAULT_PAGE_SIZE, MAX_PAGE_SIZE, MIN_PAGE_SIZE } from "@/constants";
-import { CarTaxiFront } from "lucide-react";
 import { TRPCError } from "@trpc/server";
 
 export const agentsRouter = createTRPCRouter({
@@ -60,8 +59,12 @@ export const agentsRouter = createTRPCRouter({
         getOne: protectedProcedure.input(z.object({ id: z.string() })).query(async ({ input, ctx }) => {
         const [existingAgent] = await db
             .select({
-                meetingCount: sql<number>`5`,
                 ...getTableColumns(agents),
+                meetingCount: sql<number>`(
+                    SELECT COUNT(*) 
+                    FROM ${meetings} 
+                    WHERE ${meetings.agentId} = ${agents.id}
+                )`
             })
             .from(agents)
             .where(
@@ -95,8 +98,12 @@ export const agentsRouter = createTRPCRouter({
 
         const data = await db
             .select({
-                meetingCount: sql<number>`6`,
                 ...getTableColumns(agents),
+                meetingCount: sql<number>`(
+                    SELECT COUNT(*) 
+                    FROM ${meetings} 
+                    WHERE ${meetings.agentId} = ${agents.id}
+                )`,
             })
             .from(agents)
             .where(
@@ -140,7 +147,7 @@ export const agentsRouter = createTRPCRouter({
                 .insert(agents)
                 .values({
                     ...input,
-                    userId: (ctx.auth as any).data.session.userId
+                    userId: ctx.auth.data!.session.userId
                 })
                 .returning();
                 

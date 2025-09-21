@@ -1,7 +1,6 @@
 import { AgentIdView, AgentsIdViewLoading, AgentsIdViewError } from "@/modules/agents/ui/views/agent-id-view"
 import { getQueryClient, trpc } from "@/trpc/server"
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query"
-import { parseAsNumberLiteral } from "nuqs"
 import { Suspense } from "react"
 import { ErrorBoundaryWrapper } from "@/components/error-boundary-wrapper"
 

@@ -1,11 +1,10 @@
 "use client"
 
-import React, { use } from 'react'
+import React from 'react'
 import { z } from 'zod'
 import { zodResolver} from "@hookform/resolvers/zod"
 import { FaGithub, FaGoogle } from "react-icons/fa"
 // to seperate the npm import and local import
-import { Input } from '@/components/ui/input'
 
 import {Button } from '@/components/ui/button'
 import { authClient } from '@/lib/auth-client'
@@ -13,8 +12,8 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Alert, AlertTitle} from '@/components/ui/alert'
 import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { useForm } from "react-hook-form";
-import { useState, useEffect } from 'react';
-import { OctagonAlert, OctagonAlertIcon } from 'lucide-react'
+import { useState } from 'react';
+import { OctagonAlertIcon } from 'lucide-react'
 
 import Link from 'next/link';
 import { useRouter } from 'next/navigation'

@@ -87,7 +87,7 @@ export const MeetingForm = ({
 
     const onSubmit = (values: z.infer<typeof meetingsInsertSchema>) => {
         if (isEdit) {
-            updateMeeting.mutate({ ...values, id: initialValues?.id! });
+            updateMeeting.mutate({ ...values, id: initialValues?.id || "" });
         } else {
             createMeeting.mutate(values);
         }
@@ -143,7 +143,7 @@ export const MeetingForm = ({
                                     />
                                 </FormControl>
                                 <FormDescription>
-                                    Not found what you're looking for?{" "}
+                                    Not found what you&apos;re looking for?{" "}
                                     <button
                                         type="button"
                                         className="text-primary hover:underline"

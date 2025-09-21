@@ -15,7 +15,7 @@ interface Props {
 export const CallLobby = ({
     onJoin,
 }: Props) => {
-    const { useCameraState, useMicrophoneState } = useCallStateHooks();
+    const { } = useCallStateHooks();
 
     const hasBrowserPermission = true; // Simplified for now
 

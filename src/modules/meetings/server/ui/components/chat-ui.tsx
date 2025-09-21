@@ -1,6 +1,5 @@
 import { LoadingState } from "@/components/loading-state";
 import { useTRPC } from "@/trpc/client";
-import { useQuery } from "@tanstack/react-query";
 import { useState, useEffect } from "react";
 import type { Channel as StreamChannel, StreamChat } from "stream-chat";
 import {
@@ -32,9 +31,7 @@ export const ChatUI = ({
     userImage,
 }: ChatUIProps) => {
     const trpc = useTRPC();
-    const { data: token, isLoading: isTokenLoading } = useQuery(
-        trpc.meetings.generateChatToken.queryOptions()
-    );
+    const { data: token, isLoading: isTokenLoading } = trpc.meetings.generateChatToken.useQuery();
 
     const [channel, setChannel] = useState<StreamChannel>();
     const [client, setClient] = useState<StreamChat | null>(null);
@@ -81,7 +78,6 @@ export const ChatUI = ({
 
         console.log("ChatUI - Creating channel for meeting:", meetingId);
         const newChannel = client.channel("messaging", meetingId, {
-            name: meetingName,
             members: [userId],
         });
 

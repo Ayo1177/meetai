@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button"
 import { useSidebar } from "@/components/ui/sidebar"
 import { PanelLeftCloseIcon, PanelLeftIcon, SearchIcon } from "lucide-react"
 import { DashboardCommand } from "./dashboard-command"
-import { SetStateAction, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 
 export const DashboardNavbar = () => {
     const { state, toggleSidebar, isMobile } = useSidebar();

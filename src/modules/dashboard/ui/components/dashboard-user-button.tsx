@@ -8,7 +8,7 @@ import {
     DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
 // add all components from Drawer similarly to dropdown-menu
-import {
+/*import {
 	Drawer,
 	DrawerContent,
 	DrawerHeader,
@@ -17,17 +17,15 @@ import {
 	DrawerFooter,
 	DrawerClose,
 	DrawerTrigger
-} from "@/components/ui/drawer"
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+} from "@/components/ui/drawer"*/
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { GeneratedAvatar } from "@/components/generated-avatar";
 import { ChevronDownIcon, CreditCardIcon, LogOutIcon } from 'lucide-react'
 import { useRouter } from 'next/navigation'
-import { useIsMobile } from "@/hooks/use-mobile";
-import { Button } from "@/components/ui/button";
 
 export const DashboardUserButton = () => {
 	const router = useRouter();
-	const isMobile = useIsMobile();
+	//const isMobile = useIsMobile();
 
     const { data, isPending } = authClient.useSession();
 

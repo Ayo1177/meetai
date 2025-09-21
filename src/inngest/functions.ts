@@ -10,7 +10,7 @@ interface StreamTranscriptItem {
   timestamp: number;
 }
 
-async function summarizeTranscript(transcript: any[]): Promise<string> {
+async function summarizeTranscript(transcript: StreamTranscriptItem[]): Promise<string> {
   const response = await fetch("https://api.openai.com/v1/chat/completions", {
     method: "POST",
     headers: {

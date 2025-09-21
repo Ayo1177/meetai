@@ -3,7 +3,6 @@ import {
     CircleCheckIcon,
     CircleXIcon,
     ClockArrowUpIcon,
-    Loader2,
     LoaderIcon,
     VideoIcon
 } from "lucide-react"

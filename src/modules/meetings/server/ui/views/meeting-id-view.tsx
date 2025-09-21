@@ -4,7 +4,7 @@
 import { ErrorState } from "@/components/error-state";
 import { LoadingState } from "@/components/loading-state";
 import { useTRPC } from "@/trpc/client";
-import { useMutation, useQueryClient, useSuspenseQuery } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { MeetingIdViewHeader } from "../components/meeting-id-view-header";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -43,25 +43,21 @@ export const MeetingIdView = ({ meetingId }: Props) => {
     const trpc = useTRPC();
     const queryClient = useQueryClient();
     const router = useRouter();
-    const { data } = useSuspenseQuery(
-        trpc.meetings.getOne.queryOptions({ 
-            id: meetingId 
-        }));
+    const [data] = trpc.meetings.getOne.useSuspenseQuery({ 
+        id: meetingId 
+    });
 
     const [UpdateMeetingDialogOpen, setUpdateMeetingDialogOpen] = useState(false);
     const [RemoveConfirmationDialog, confirmRemove] = useConfirm();
-    const removeMeeting = useMutation(
-        trpc.meetings.remove.mutationOptions({
-            onSuccess: async () => {
-                await queryClient.invalidateQueries(trpc.meetings.getMany.queryOptions({}));
-                await queryClient.invalidateQueries(trpc.premium.getFreeUsage.queryOptions());
-                router.push("/meetings");
-            },
-            onError: (error) => {
-                toast.error(error.message);
-            },
-        })
-    );
+    const removeMeeting = trpc.meetings.remove.useMutation({
+        onSuccess: async () => {
+            await queryClient.invalidateQueries();
+            router.push("/meetings");
+        },
+        onError: (error) => {
+            toast.error(error.message);
+        },
+    });
 
 
     const handleRemoveMeeting = async () => {
@@ -100,8 +96,6 @@ export const MeetingIdView = ({ meetingId }: Props) => {
                 {isProcessing && <ProcessingState />}
                 {isUpcoming && <UpcomingState 
                     meetingId={meetingId}
-                    onCancelMeeting={() => {}}
-                    inCancelling={false}
                 />}
                 {isActive && <ActiveState meetingId={meetingId} />}
             </div>

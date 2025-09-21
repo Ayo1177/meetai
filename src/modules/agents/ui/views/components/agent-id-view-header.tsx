@@ -27,7 +27,7 @@ interface Props {
 }
 
 export const AgentIdViewHeader = ({ 
-    agentId, 
+    agentId,
     agentName, 
     onEdit, 
     onRemove 
@@ -48,7 +48,7 @@ export const AgentIdViewHeader = ({
                     </BreadcrumbSeparator>
                     <BreadcrumbItem>
                         <BreadcrumbLink asChild className="text-foreground text-xl font-medius">
-                            <Link href="/agents/${agentId}">
+                            <Link href={`/agents/${agentId}`}>
                                 {agentName}
                             </Link>
                         </BreadcrumbLink>

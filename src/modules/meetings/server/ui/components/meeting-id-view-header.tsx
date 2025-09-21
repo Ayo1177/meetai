@@ -29,7 +29,7 @@ interface Props {
 }
 
 export const MeetingIdViewHeader = ({ 
-    meetingId, 
+    meetingId,
     meetingName, 
     onEdit, 
     onRemove 
@@ -50,7 +50,7 @@ export const MeetingIdViewHeader = ({
                     </BreadcrumbSeparator>
                     <BreadcrumbItem>
                         <BreadcrumbLink asChild className="text-foreground text-xl font-medius">
-                            <Link href="/meetings/${meetingId}">
+                            <Link href={`/meetings/${meetingId}`}>
                                 {meetingName}
                             </Link>
                         </BreadcrumbLink>
