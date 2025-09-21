@@ -17,6 +17,7 @@ import { useState } from 'react';
 import { OctagonAlertIcon } from 'lucide-react'
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation'
 
 const formSchema = z.object({
@@ -228,7 +229,7 @@ export const SignUpView = () => {
 
 
                 <div className='bg-radial from-sidebar-accent to-sidebar relative hidden md:flex flex-col gap-y-4 items-center justify-center'>
-                    <img src="/Logo.svg" alt="Image" className='h-[92px] w-[92px]' />
+                    <Image src="/Logo.svg" alt="Meet.ai Logo" width={92} height={92} className='h-[92px] w-[92px]' />
                     <p className='text-xl font-semibold text-white'>
                        Meet.ai 
                     </p>

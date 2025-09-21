@@ -5,6 +5,7 @@ import { generatedAvatrUri } from "@/lib/avatar";
 import { DefaultVideoPlaceholder, VideoPreview, useCallStateHooks, StreamVideoParticipant, ToggleAudioPreviewButton, ToggleVideoPreviewButton } from "@stream-io/video-react-sdk";
 import "@stream-io/video-react-sdk/dist/css/styles.css";
 import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { LogInIcon } from "lucide-react";
 
@@ -38,9 +39,11 @@ export const CallLobby = ({
                 }
                 />
                 <div className="absolute inset-0 flex items-center justify-center">
-                    <img 
+                    <Image 
                         src={avatarUrl} 
                         alt={data?.user?.name ?? "User"} 
+                        width={80}
+                        height={80}
                         className="w-20 h-20 rounded-full object-cover border-2 border-white shadow-lg"
                     />
                 </div>
