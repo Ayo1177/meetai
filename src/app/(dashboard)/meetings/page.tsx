@@ -10,7 +10,9 @@ import { redirect } from 'next/navigation';
 import { SearchParams } from 'next/dist/server/request/search-params';
 import { loadSearchParams } from '@/modules/meetings/params';
 
-
+// Force dynamic rendering for this page
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 interface Props {
   searchParams: Promise<SearchParams>

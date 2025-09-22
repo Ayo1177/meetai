@@ -1,9 +1,5 @@
 import React from 'react'
 
-// Force dynamic rendering for this layout
-export const dynamic = 'force-dynamic';
-export const revalidate = 0;
-
 interface Props {
     children: React.ReactNode
 };
