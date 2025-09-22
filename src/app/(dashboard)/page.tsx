@@ -3,6 +3,7 @@ import { authClient } from "@/lib/auth-client";
 import { HomeView } from "@/modules/home/ui/views/home-view";
 import { redirect } from "next/navigation";
 //import { useSession } from "@/lib/auth-client";
+// import useSession from "@/lib/auth-client";
 
 const Page = async () => {
   const { data: session } = await authClient.getSession({
