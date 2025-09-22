@@ -6,6 +6,11 @@ const nextConfig: NextConfig = {
     // Remove console logs in production
     removeConsole: process.env.NODE_ENV === 'production',
   },
+  // Experimental features to fix client reference manifest issues
+  experimental: {
+    // Enable server components logging for debugging
+    serverComponentsExternalPackages: [],
+  },
   // Webpack configuration to handle CSS processing
   webpack: (config, { isServer, dev }) => {
     // Ensure proper CSS handling for Vercel deployment

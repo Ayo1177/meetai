@@ -2,8 +2,9 @@ import { headers } from "next/headers";
 import { authClient } from "@/lib/auth-client";
 import { HomeView } from "@/modules/home/ui/views/home-view";
 import { redirect } from "next/navigation";
-//import { useSession } from "@/lib/auth-client";
-// import useSession from "@/lib/auth-client";
+
+// Force dynamic rendering for this page
+export const dynamic = 'force-dynamic';
 
 const Page = async () => {
   const { data: session } = await authClient.getSession({
