@@ -10,6 +10,8 @@ const nextConfig: NextConfig = {
   experimental: {
     // Enable server components logging for debugging
     serverComponentsExternalPackages: [],
+    // Fix for client reference manifest issues
+    optimizePackageImports: [],
   },
   // Webpack configuration to handle CSS processing
   webpack: (config, { isServer, dev }) => {
