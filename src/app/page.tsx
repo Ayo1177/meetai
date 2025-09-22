@@ -2,6 +2,10 @@ import { headers } from "next/headers";
 import { authClient } from "@/lib/auth-client";
 import { redirect } from "next/navigation";
 
+// Force dynamic rendering for this page
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export default async function HomePage() {
   // Check if user is authenticated
   try {
