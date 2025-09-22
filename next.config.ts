@@ -1,11 +1,6 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  // Disable experimental features that might cause issues
-  experimental: {
-    // Use traditional CSS chunking instead of lightningcss
-    cssChunking: 'strict',
-  },
   // Ensure proper CSS handling
   compiler: {
     // Remove console logs in production
@@ -22,18 +17,6 @@ const nextConfig: NextConfig = {
         os: false,
       };
     }
-    
-    // Exclude problematic native modules
-    config.externals = config.externals || [];
-    config.externals.push({
-      'lightningcss': 'lightningcss',
-    });
-    
-    // Add alias to prevent lightningcss from being loaded
-    config.resolve.alias = {
-      ...config.resolve.alias,
-      'lightningcss': false,
-    };
     
     return config;
   },
