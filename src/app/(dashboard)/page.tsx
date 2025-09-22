@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 
 // Force dynamic rendering for this page
 export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 const Page = async () => {
   const { data: session } = await authClient.getSession({

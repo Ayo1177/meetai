@@ -1,27 +1,19 @@
-import { SidebarProvider } from '@/components/ui/sidebar'
-import { DashboardNavbar } from '@/modules/dashboard/ui/components/dashboard-navbar'
-import { DashboardSidebar } from '@/modules/dashboard/ui/components/dashboard-sidebar'
 import React from 'react'
+import { DashboardClientWrapper } from '@/components/dashboard-client-wrapper'
 
 // Force dynamic rendering for this layout
 export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 interface Props {
     children: React.ReactNode
 };
 
-
-
-
 const layout = ({children}: Props) => {
   return (
-    <SidebarProvider>
-        <DashboardSidebar />
-        <main className="flex flex-col h-screen w-screen bg-muted">
-          <DashboardNavbar />
-            {children}
-        </main>
-    </SidebarProvider>
+    <DashboardClientWrapper>
+      {children}
+    </DashboardClientWrapper>
   )
 }   
 

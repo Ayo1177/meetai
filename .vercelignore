@@ -1,0 +1,3 @@
+# Ignore problematic build artifacts
+.next/server/app/(dashboard)/page_client-reference-manifest.js
+.next/server/app/(dashboard)/**/page_client-reference-manifest.js
