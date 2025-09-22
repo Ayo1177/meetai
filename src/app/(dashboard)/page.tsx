@@ -1,6 +1,5 @@
 import { headers } from "next/headers";
 import { authClient } from "@/lib/auth-client";
-import { HomeView } from "@/modules/home/ui/views/home-view";
 import { redirect } from "next/navigation";
 
 // Force dynamic rendering for this page
@@ -19,7 +18,10 @@ const Page = async () => {
   }
 
   return (
-    <HomeView />
+    <div className="p-6">
+      <h1 className="text-2xl font-bold mb-4">Dashboard</h1>
+      <p>Welcome to your dashboard!</p>
+    </div>
   );
 };
 
