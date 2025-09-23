@@ -1,56 +1,22 @@
-"use client"
-
-import dynamic from "next/dynamic";
-import { redirect } from "next/navigation";
-import { useEffect, useState } from "react";
+import { headers } from "next/headers";
 import { authClient } from "@/lib/auth-client";
+import { HomeView } from "@/modules/home/ui/views/home-view";
+import { redirect } from "next/navigation";
 
-// Dynamically import HomeView to prevent SSR issues
-const HomeView = dynamic(() => import('@/modules/home/ui/views/home-view').then(mod => ({ default: mod.HomeView })), {
-  ssr: false,
-  loading: () => (
-    <div className="flex items-center justify-center min-h-screen">
-      <div className="text-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 mx-auto"></div>
-        <p className="mt-2 text-gray-600">Loading...</p>
-      </div>
-    </div>
-  )
-});
+const Page = async () => {
+  const { data: session } = await authClient.getSession({
+    fetchOptions: {
+      headers: await headers(),
+    },
+  });
 
-const Page = () => {
-  const [isLoading, setIsLoading] = useState(true);
-
-  useEffect(() => {
-    const checkSession = async () => {
-      try {
-        const session = await authClient.getSession();
-        if (!session?.data) {
-          redirect("/auth/sign-in");
-        }
-      } catch (error) {
-        console.log("Auth check failed:", error);
-        redirect("/auth/sign-in");
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    checkSession();
-  }, []);
-
-  if (isLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 mx-auto"></div>
-          <p className="mt-2 text-gray-600">Loading...</p>
-        </div>
-      </div>
-    );
+  if (!session) {
+    redirect("/auth/sign-in");
   }
 
-  return <HomeView />;
+  return (
+    <HomeView />
+  );
 };
 
 export default Page;
