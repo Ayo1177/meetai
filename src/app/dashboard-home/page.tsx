@@ -1,22 +1,30 @@
 import { headers } from "next/headers";
 import { authClient } from "@/lib/auth-client";
-import { HomeView } from "@/modules/home/ui/views/home-view";
 import { redirect } from "next/navigation";
 
-const Page = async () => {
-  const { data: session } = await authClient.getSession({
-    fetchOptions: {
-      headers: await headers(),
-    },
-  });
+// Force dynamic rendering for this page
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
-  if (!session) {
+const Page = async () => {
+  try {
+    const { data: session } = await authClient.getSession({
+      fetchOptions: {
+        headers: await headers(),
+      },
+    });
+
+    if (!session) {
+      redirect("/auth/sign-in");
+    }
+
+    // Redirect authenticated users directly to meetings
+    redirect("/meetings");
+  } catch (error) {
+    console.error("Auth error:", error);
+    // Fallback to sign-in page if auth fails
     redirect("/auth/sign-in");
   }
-
-  return (
-    <HomeView />
-  );
 };
 
 export default Page;
