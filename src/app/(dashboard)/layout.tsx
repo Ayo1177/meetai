@@ -1,4 +1,6 @@
 import React from 'react'
+import { SidebarProvider, SidebarInset, SidebarTrigger } from '@/components/ui/sidebar'
+import { DashboardSidebar } from '@/modules/dashboard/ui/components/dashboard-sidebar'
 
 interface Props {
     children: React.ReactNode
@@ -6,16 +8,20 @@ interface Props {
 
 const layout = ({children}: Props) => {
   return (
-    <div className="min-h-screen bg-background">
-      <header className="border-b bg-background">
-        <div className="container mx-auto px-4 py-4">
-          <h1 className="text-xl font-semibold">Meet.AI Dashboard</h1>
-        </div>
-      </header>
-      <main className="container mx-auto">
-        {children}
-      </main>
-    </div>
+    <SidebarProvider>
+      <DashboardSidebar />
+      <SidebarInset>
+        <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
+          <SidebarTrigger className="-ml-1" />
+          <div className="flex items-center gap-2">
+            <h1 className="text-xl font-semibold">Meet.AI Dashboard</h1>
+          </div>
+        </header>
+        <main className="flex-1 p-4">
+          {children}
+        </main>
+      </SidebarInset>
+    </SidebarProvider>
   )
 }   
 
