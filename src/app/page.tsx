@@ -1,20 +1,30 @@
+import { headers } from "next/headers";
+import { authClient } from "@/lib/auth-client";
 import { redirect } from "next/navigation";
 
+// Force dynamic rendering for this page
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 const Page = async () => {
-  // Temporarily disable auth to fix server error
-  // TODO: Re-enable auth once server issues are resolved
-  
-  return (
-    <div className="p-6">
-      <h1 className="text-2xl font-bold mb-4">Welcome to MeetAI</h1>
-      <p>Your AI-powered meeting assistant is ready!</p>
-      <div className="mt-4">
-        <a href="/auth/sign-in" className="text-blue-600 hover:underline">Sign In</a>
-        <span className="mx-2">|</span>
-        <a href="/auth/sign-up" className="text-blue-600 hover:underline">Sign Up</a>
-      </div>
-    </div>
-  );
+  try {
+    const { data: session } = await authClient.getSession({
+      fetchOptions: {
+        headers: await headers(),
+      },
+    });
+
+    if (!session) {
+      redirect("/auth/sign-in");
+    }
+
+    // Redirect authenticated users directly to meetings
+    redirect("/meetings");
+  } catch (error) {
+    console.error("Auth error:", error);
+    // Fallback to sign-in page if auth fails
+    redirect("/auth/sign-in");
+  }
 };
 
 export default Page;
