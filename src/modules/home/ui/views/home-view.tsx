@@ -12,6 +12,7 @@ const HomeView = () => {
         <div className="p-6 border rounded-lg shadow-sm">
           <h3 className="text-lg font-semibold mb-2">Start Meeting</h3>
           <p className="text-gray-600 mb-4">Create a new AI-powered meeting session</p>
+          {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
           <a href="/meetings" className="inline-block bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
             Start New Meeting
           </a>
@@ -20,6 +21,7 @@ const HomeView = () => {
         <div className="p-6 border rounded-lg shadow-sm">
           <h3 className="text-lg font-semibold mb-2">Manage Agents</h3>
           <p className="text-gray-600 mb-4">Configure and manage your AI agents</p>
+          {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
           <a href="/agents" className="inline-block border border-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-50">
             View Agents
           </a>
@@ -28,6 +30,7 @@ const HomeView = () => {
         <div className="p-6 border rounded-lg shadow-sm">
           <h3 className="text-lg font-semibold mb-2">Meeting History</h3>
           <p className="text-gray-600 mb-4">Review past meetings and transcripts</p>
+          {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
           <a href="/meetings" className="inline-block border border-gray-300 text-gray-700 px-4 py-2 rounded hover:bg-gray-50">
             View History
           </a>

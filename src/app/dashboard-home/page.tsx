@@ -1,0 +1,22 @@
+import { headers } from "next/headers";
+import { authClient } from "@/lib/auth-client";
+import { HomeView } from "@/modules/home/ui/views/home-view";
+import { redirect } from "next/navigation";
+
+const Page = async () => {
+  const { data: session } = await authClient.getSession({
+    fetchOptions: {
+      headers: await headers(),
+    },
+  });
+
+  if (!session) {
+    redirect("/auth/sign-in");
+  }
+
+  return (
+    <HomeView />
+  );
+};
+
+export default Page;
